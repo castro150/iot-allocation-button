@@ -4,7 +4,9 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 // var Contact = require('./app/models/Contact');
 
-mongoose.connect('mongodb://heroku_4355hl84:nm29ahat6jo1f98nf2receoelc@ds145302.mlab.com:45302/heroku_4355hl84');
+mongoose.connect('mongodb://heroku_4355hl84:nm29ahat6jo1f98nf2receoelc@ds145302.mlab.com:45302/heroku_4355hl84', {
+  useMongoClient: true
+});
 
 //init bodyParser to extract properties from POST data
 app.use(bodyParser.urlencoded({
