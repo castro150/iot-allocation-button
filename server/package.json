@@ -1,0 +1,23 @@
+{
+  "name": "iot-ab-server",
+  "version": "1.0.0",
+  "description": "IoT Allocation Button Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "iot-allocation-button"
+  },
+  "engines": {
+    "node": "7.10.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.11"
+  }
+}
