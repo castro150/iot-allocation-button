@@ -1,10 +1,15 @@
-var express = require('express');
-var app = express(); //init Express
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-// var Contact = require('./app/models/Contact');
+'use strict'
 
-mongoose.connect('mongodb://heroku_4355hl84:nm29ahat6jo1f98nf2receoelc@ds145302.mlab.com:45302/heroku_4355hl84', {
+let express = require('express');
+let app = express();
+let bodyParser = require('body-parser');
+let mongoose = require('mongoose');
+
+// importig models for the app
+require('./models/Call');
+
+let DB_URL = process.env.MONGODB_URI || 'mongodb://heroku_9884mjmt:agmhnf1a7pqpajl1hlh6dkec46@ds133814.mlab.com:33814/heroku_9884mjmt';
+mongoose.connect(DB_URL, {
   useMongoClient: true
 });
 
@@ -14,10 +19,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;
+let port = process.env.PORT || 8080;
 
 //init Express Router
-var router = express.Router();
+let router = express.Router();
 
 //default/test route
 router.get('/', function(req, res) {
@@ -26,68 +31,27 @@ router.get('/', function(req, res) {
   });
 });
 
-// router.route('/contacts/:contact_id')
-//   // retrieve contact: GET http://localhost:8080/api/bears/:bear_id)
-//   .get(function(req, res) {
-//     Contact.findById(req.params.contact_id, function(err, contact) {
-//       if (err)
-//         res.send(err);
-//       res.json(contact);
-//     });
-//   })
-//   // update contact: PUT http://localhost:8080/api/contacts/{id}
-//   .put(function(req, res) {
-//     Contact.findById(req.params.contact_id, function(err, contact) {
-//       if (err) {
-//         res.send(err);
-//       } else {
-//         contact.firstName = req.body.firstname;
-//         contact.lastName = req.body.lastname;
-//         contact.save(function(err) {
-//           if (err)
-//             res.send(err);
-//           res.json({
-//             message: 'Contact updated!'
-//           });
-//         })
-//       }
-//     });
-//   })
-//   //delete a contact
-//   .delete(function(req, res) {
-//     Contact.remove({
-//       _id: req.params.contact_id
-//     }, function(err, contact) {
-//       if (err)
-//         res.send(err);
-//       res.json({
-//         message: 'Successfully deleted contact'
-//       });
-//     });
-//   });
+const Call = mongoose.model('Call');
 
-// router.route('/contacts')
-//   // create contact: POST http://localhost:8080/api/contacts
-//   .post(function(req, res) {
-//     var contact = new Contact();
-//     contact.firstName = req.body.firstname;
-//     contact.lastName = req.body.lastname;
-//     contact.save(function(err) {
-//       if (err)
-//         res.send(err);
-//       res.json({
-//         message: 'Contact created!'
-//       });
-//     });
-//   })
-//   //GET all contacts: http://localhost:8080/api/contacts
-//   .get(function(req, res) {
-//     Contact.find(function(err, contacts) {
-//       if (err)
-//         res.send(err);
-//       res.json(contacts);
-//     });
-//   });
+router.post('/calls', function(req, res, next) {
+  if (!req.body || !req.body.location) {
+    return res.status(400).json('Missing required body propertie.');
+  }
+
+  let newCall = new Call({
+    priority: req.body.priority,
+    location: req.body.location
+  });
+
+  newCall.save(function(err) {
+    if (err) {
+      return next(err);
+    }
+
+
+    return res.status(200).json('Call added with success!');
+  });
+});
 
 //associate router to url path
 app.use('/api', router);
