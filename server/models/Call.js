@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 
 let CallSchema = new mongoose.Schema({
   priority: Boolean,
-  location: String
+  location: String,
+  moment: Date,
+  replayed: Boolean
 });
 
 mongoose.model('Call', CallSchema);

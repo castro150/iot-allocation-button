@@ -43,6 +43,9 @@ router.post('/calls', function(req, res, next) {
     location: req.body.location
   });
 
+  newCall.moment = new Date();
+  newCall.replayed = false;
+
   newCall.save(function(err) {
     if (err) {
       return next(err);
