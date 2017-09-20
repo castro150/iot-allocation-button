@@ -51,7 +51,6 @@ router.post('/calls', function(req, res, next) {
       return next(err);
     }
 
-
     return res.status(200).json('Call added with success!');
   });
 });
