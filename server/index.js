@@ -43,10 +43,10 @@ router.post('/calls', function(req, res, next) {
 
   let newCall = new Call({
     priority: req.body.priority,
-    location: req.body.location
+    location: req.body.location,
+    moment: req.body.moment
   });
 
-  newCall.moment = new Date();
   newCall.replayed = false;
 
   newCall.save(function(err) {
