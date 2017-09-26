@@ -1,0 +1,34 @@
+<div class="jumbotron">
+  <p>
+    Chamados
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="text-center">Local</th>
+          <th class="text-center">Data</th>
+          <th class="text-center">Prioridade</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody ng-repeat="call in ctrl.model.calls">
+        <tr>
+          <td style="vertical-align: middle">{{call.location}}</td>
+          <td style="vertical-align: middle">{{call.moment}}</td>
+          <td style="color: red; vertical-align: middle" ng-if="call.priority"><strong>Alta</strong></td>
+          <td style="vertical-align: middle" ng-if="!call.priority">Baixa</td>
+          <td ng-if="call.replayed">
+            <div class="alert alert-success" role="alert">
+              <strong>Atendido</strong>
+            </div>
+          </td>
+          <td ng-if="!call.replayed">
+            <div class="alert alert-danger" role="alert">
+              <strong>Pendente</strong>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </p>
+</div>

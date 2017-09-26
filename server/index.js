@@ -4,6 +4,7 @@ let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
+let cors = require('cors');
 
 // importig models for the app
 require('./models/Call');
@@ -18,6 +19,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
+
+app.use(cors());
 
 let port = process.env.PORT || 8080;
 
@@ -51,7 +54,17 @@ router.post('/calls', function(req, res, next) {
       return next(err);
     }
 
-    return res.status(200).json('Call added with success!');
+    return res.status(201).json('Call added with success!');
+  });
+});
+
+router.get('/calls', function(req, res, next) {
+  Call.find({}, function(err, calls) {
+    if (err) {
+      return next(err);
+    }
+
+    return res.status(201).json(calls);
   });
 });
 
