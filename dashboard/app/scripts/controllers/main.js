@@ -14,9 +14,7 @@ angular.module('dashboardIotApp')
     ctrl.model = {};
 
     var refreshList = function() {
-      // $http.get('http://iab-server.herokuapp.com/api/calls').then(function(response) {
-      // TODO REMOVER!!!
-      $http.get('http://localhost:8080/api/calls').then(function(response) {
+      $http.get('http://iab-server.herokuapp.com/api/calls').then(function(response) {
         ctrl.model.calls = response.data;
       });
     };
