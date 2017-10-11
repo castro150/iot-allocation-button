@@ -13,14 +13,30 @@ angular.module('dashboardIotApp')
 
     ctrl.model = {};
 
-    var refreshList = function() {
-      $http.get('http://iab-server.herokuapp.com/api/calls').then(function(response) {
-        ctrl.model.calls = response.data;
+    var refreshLists = function() {
+      $http.get('http://iab-server.herokuapp.com/api/calls/unattended').then(function(response) {
+        ctrl.model.unattendedCalls = response.data;
+      });
+
+      $http.get('http://iab-server.herokuapp.com/api/calls/attended').then(function(response) {
+        ctrl.model.attendedCalls = response.data;
       });
     };
 
-    refreshList();
+    refreshLists();
     setInterval(function() {
-      refreshList();
+      refreshLists();
     }, 5000);
+
+    ctrl.formatDate = function(date) {
+      date = new Date(date);
+
+      var day = date.getDate();
+      var month = date.getMonth() + 1;
+      var year = date.getFullYear();
+
+      var result = day + '/' + month + '/' + year;
+      result = result + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+      return result;
+    };
   }]);
