@@ -6,7 +6,9 @@ let CallSchema = new mongoose.Schema({
   priority: Boolean,
   location: String,
   moment: Date,
-  replayed: Boolean
+  attended: Boolean,
+  attendedBy: String,
+  attendedTime: Date
 });
 
 mongoose.model('Call', CallSchema);

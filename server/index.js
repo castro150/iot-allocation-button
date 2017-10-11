@@ -47,7 +47,7 @@ router.post('/calls', function(req, res, next) {
     moment: req.body.moment
   });
 
-  newCall.replayed = false;
+  newCall.attended = false;
 
   newCall.save(function(err) {
     if (err) {
@@ -59,12 +59,58 @@ router.post('/calls', function(req, res, next) {
 });
 
 router.get('/calls', function(req, res, next) {
-  Call.find({}, function(err, calls) {
+  Call.find({}, null, {
+    sort: {
+      moment: -1
+    }
+  }, function(err, calls) {
     if (err) {
       return next(err);
     }
 
-    return res.status(201).json(calls);
+    return res.status(200).json(calls);
+  });
+});
+
+router.get('/calls/unattended', function(req, res, next) {
+  Call.find({
+    attended: false
+  }, null, {
+    sort: {
+      moment: 1
+    }
+  }, function(err, calls) {
+    if (err) {
+      return next(err);
+    }
+
+    let priorityCalls = calls.filter(function(call) {
+      return call.priority;
+    });
+
+    let notPriorityCalls = calls.filter(function(call) {
+      return !call.priority;
+    });
+
+    let result = priorityCalls.concat(notPriorityCalls);
+
+    return res.status(200).json(result);
+  });
+});
+
+router.get('/calls/attended', function(req, res, next) {
+  Call.find({
+    attended: true
+  }, null, {
+    sort: {
+      attendedTime: -1
+    }
+  }, function(err, calls) {
+    if (err) {
+      return next(err);
+    }
+
+    return res.status(200).json(calls);
   });
 });
 

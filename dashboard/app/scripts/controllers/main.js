@@ -14,13 +14,10 @@ angular.module('dashboardIotApp')
     ctrl.model = {};
 
     var refreshList = function() {
-      $http.get('http://iab-server.herokuapp.com/api/calls').then(function(response) {
+      // $http.get('http://iab-server.herokuapp.com/api/calls').then(function(response) {
+      // TODO REMOVER!!!
+      $http.get('http://localhost:8080/api/calls').then(function(response) {
         ctrl.model.calls = response.data;
-        ctrl.model.calls.sort(function(actual, next) {
-          var firstDate = new Date(actual.moment);
-          var secondDate = new Date(next.moment);
-          return firstDate - secondDate;
-        });
       });
     };
 

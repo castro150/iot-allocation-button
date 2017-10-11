@@ -6,7 +6,7 @@
       <thead>
         <tr>
           <th class="text-center">Local</th>
-          <th class="text-center">Data</th>
+          <th class="text-center">Data do Chamado</th>
           <th class="text-center">Prioridade</th>
           <th class="text-center">Status</th>
         </tr>
@@ -17,12 +17,12 @@
           <td style="vertical-align: middle">{{call.moment}}</td>
           <td style="color: red; vertical-align: middle" ng-if="call.priority"><strong>Alta</strong></td>
           <td style="vertical-align: middle" ng-if="!call.priority">Baixa</td>
-          <td ng-if="call.replayed">
+          <td ng-if="call.attended">
             <div class="alert alert-success" role="alert">
               <strong>Atendido</strong>
             </div>
           </td>
-          <td ng-if="!call.replayed">
+          <td ng-if="!call.attended">
             <div class="alert alert-danger" role="alert">
               <strong>Pendente</strong>
             </div>
