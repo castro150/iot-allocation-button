@@ -36,6 +36,10 @@
     "time-grunt": "^1.0.0"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": "7.10.1"
+  },
+  "dependencies": {
+    "express": "^4.15.5",
+    "gzippo": "^0.2.0"
   }
 }
