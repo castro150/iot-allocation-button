@@ -5,6 +5,15 @@ let app = express();
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 let cors = require('cors');
+let nodemailer = require('nodemailer');
+
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'iot.allocation.button@gmail.com',
+    pass: 'botao123!'
+  }
+});
 
 // importig models for the app
 require('./models/Call');
@@ -41,6 +50,8 @@ router.post('/calls', function(req, res, next) {
     return res.status(400).json('Missing required body propertie.');
   }
 
+  sendPendingEmail();
+
   let newCall = new Call({
     priority: req.body.priority,
     location: req.body.location,
@@ -57,6 +68,45 @@ router.post('/calls', function(req, res, next) {
     return res.status(201).json('Call added with success!');
   });
 });
+
+let sendPendingEmail = function() {
+  var cutoff = new Date();
+  cutoff.setHours(cutoff.getHours() - 8);
+
+  Call.find({
+    attended: false,
+    moment: {
+      $lt: cutoff
+    }
+  }, null, {
+    sort: {
+      moment: 1
+    }
+  }, function(err, calls) {
+    if (err) {
+      return next(err);
+    }
+
+    if (calls.length > 0) {
+      var mailOptions = {
+        from: 'iot.allocation.button@gmail.com',
+        to: 'bernardosantossuarez@gmail.com',
+        subject: 'Chamados do IoT Allocation Button pendentes!',
+        text: 'Existem ' + calls.length + ' chamados pendentes a mais de 8 horas!'
+      };
+
+      transporter.sendMail(mailOptions, function(err, info){
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    }
+
+    return;
+  });
+};
 
 router.get('/calls', function(req, res, next) {
   Call.find({}, null, {
