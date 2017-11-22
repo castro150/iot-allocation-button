@@ -39,4 +39,16 @@ angular.module('dashboardIotApp')
       result = result + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
       return result;
     };
+
+    ctrl.isNotAttended = function(call) {
+      return !call.attended && call.attendedBy === undefined;
+    };
+
+    ctrl.isAssigned = function(call) {
+      return !call.attended && call.attendedBy !== undefined;
+    };
+
+    ctrl.isAttended = function(call) {
+      return call.attended;
+    };
   }]);

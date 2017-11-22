@@ -95,7 +95,7 @@ let sendPendingEmail = function() {
         text: 'Existem ' + calls.length + ' chamados pendentes a mais de 8 horas!'
       };
 
-      transporter.sendMail(mailOptions, function(err, info){
+      transporter.sendMail(mailOptions, function(err, info) {
         if (err) {
           console.log(err);
         } else {
@@ -170,31 +170,16 @@ router.put('/calls/attend', function(req, res, next) {
   }
 
   Call.find({
-    attended: false
-  }, null, {
-    sort: {
-      moment: 1
-    }
+    attended: false,
+    attendedBy: req.body.attendedBy
   }, function(err, calls) {
     if (err) {
       return next(err);
     }
 
-    let priorityCalls = calls.filter(function(call) {
-      return call.priority;
-    });
-
-    let notPriorityCalls = calls.filter(function(call) {
-      return !call.priority;
-    });
-
-    let orderedCalls = priorityCalls.concat(notPriorityCalls);
-    let toAttend = {};
-    if (orderedCalls.length > 0) {
-      toAttend = orderedCalls[0];
+    if (calls.length > 0) {
+      let toAttend = calls[0];
       toAttend.attended = true;
-      toAttend.attendedBy = req.body.attendedBy;
-      toAttend.attendedTime = new Date();
 
       Call.findByIdAndUpdate(toAttend._id, toAttend, {
         new: true
@@ -202,7 +187,41 @@ router.put('/calls/attend', function(req, res, next) {
         return res.status(200).json(attended);
       });
     } else {
-      return res.status(204).json();
+      Call.find({
+        attended: false
+      }, null, {
+        sort: {
+          moment: 1
+        }
+      }, function(err, calls) {
+        if (err) {
+          return next(err);
+        }
+
+        let priorityCalls = calls.filter(function(call) {
+          return call.priority;
+        });
+
+        let notPriorityCalls = calls.filter(function(call) {
+          return !call.priority;
+        });
+
+        let orderedCalls = priorityCalls.concat(notPriorityCalls);
+        let toAttend = {};
+        if (orderedCalls.length > 0) {
+          toAttend = orderedCalls[0];
+          toAttend.attendedBy = req.body.attendedBy;
+          toAttend.attendedTime = new Date();
+
+          Call.findByIdAndUpdate(toAttend._id, toAttend, {
+            new: true
+          }, function(err, attended) {
+            return res.status(200).json(attended);
+          });
+        } else {
+          return res.status(204).json();
+        }
+      });
     }
   });
 });

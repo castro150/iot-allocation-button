@@ -9,6 +9,7 @@
             <th class="text-center">Local</th>
             <th class="text-center">Data do Chamado</th>
             <th class="text-center">Prioridade</th>
+            <th class="text-center">Responsável</th>
             <th class="text-center">Status</th>
           </tr>
         </thead>
@@ -18,12 +19,19 @@
             <td style="vertical-align: middle">{{ctrl.formatDate(call.moment)}}</td>
             <td style="color: red; vertical-align: middle" ng-if="call.priority"><strong>Alta</strong></td>
             <td style="vertical-align: middle" ng-if="!call.priority">Baixa</td>
-            <td ng-if="call.attended">
+            <td style="vertical-align: middle" ng-if="call.attendedBy">{{call.attendedBy}}</td>
+            <td style="vertical-align: middle" ng-if="!call.attendedBy">-</td>
+            <td ng-if="ctrl.isAttended(call)">
               <div class="alert alert-success" role="alert">
                 <strong>Atendido</strong>
               </div>
             </td>
-            <td ng-if="!call.attended">
+            <td ng-if="ctrl.isAssigned(call)">
+              <div class="alert alert-warning" role="alert">
+                <strong>Atribuído</strong>
+              </div>
+            </td>
+            <td ng-if="ctrl.isNotAttended(call)">
               <div class="alert alert-danger" role="alert">
                 <strong>Pendente</strong>
               </div>
@@ -55,12 +63,12 @@
             <td style="vertical-align: middle">{{ctrl.formatDate(call.attendedTime)}}</td>
             <td style="color: red; vertical-align: middle" ng-if="call.priority"><strong>Alta</strong></td>
             <td style="vertical-align: middle" ng-if="!call.priority">Baixa</td>
-            <td ng-if="call.attended">
+            <td ng-if="ctrl.isAttended(call)">
               <div class="alert alert-success" role="alert">
                 <strong>Atendido</strong>
               </div>
             </td>
-            <td ng-if="!call.attended">
+            <td ng-if="ctrl.isNotAttended(call)">
               <div class="alert alert-danger" role="alert">
                 <strong>Pendente</strong>
               </div>
